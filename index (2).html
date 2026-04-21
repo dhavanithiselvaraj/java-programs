@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Java Programs</title>
+</head>
+<body>
+
+<h1>Java Programs Collection</h1>
+
+<hr>
+
+<h2>1. Student Result Calculation</h2>
+<pre>
+import java.util.Scanner;
+public class Main {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+try {
+System.out.println("Enter Student ID: ");
+int id = sc.nextInt();
+sc.nextLine();
+
+System.out.println("Enter Student Name: ");
+String name = sc.nextLine();
+
+System.out.println("Enter number of subjects: ");
+int n = sc.nextInt();
+sc.nextLine();
+
+if (n <= 0) {
+System.out.println("Number of subjects must be greater than 0.");
+return;
+}
+
+String[] subjects = new String[n];
+int[] marksArray = new int[n];
+int total = 0;
+
+for (int i = 0; i < n; i++) {
+System.out.println("Enter name of subject " + (i + 1) + ": ");
+subjects[i] = sc.nextLine();
+
+int marks;
+while (true) {
+System.out.println("Enter marks for " + subjects[i] + ": ");
+marks = sc.nextInt();
+
+if (marks <= 0 || marks > 100) {
+System.out.println("Invalid marks!");
+} else {
+break;
+}
+}
+sc.nextLine();
+marksArray[i] = marks;
+total += marks;
+}
+
+double percentage = (double) total / n;
+
+System.out.println("\n--- Student Details ---");
+System.out.println("ID: " + id);
+System.out.println("Name: " + name);
+
+System.out.println("\nSubject-wise Marks:");
+for (int i = 0; i < n; i++) {
+System.out.println(subjects[i] + " " + marksArray[i]);
+}
+
+System.out.println("\nTotal Marks: " + total);
+System.out.printf("Percentage: %.2f%%\n", percentage);
+
+if (percentage >= 50)
+System.out.println("Result: Pass");
+else
+System.out.println("Result: Fail");
+
+} catch (Exception e) {
+System.out.println("Error");
+}
+}
+}
+</pre>
+
+<hr>
+
+<h2>2. Banking System (Custom Exception)</h2>
+<pre>
+import java.util.Scanner;
+
+class InsufficientBalanceException extends Exception {
+public InsufficientBalanceException(String message) {
+super(message);
+}
+}
+
+class BankAccount {
+private double balance;
+
+public BankAccount(double balance) {
+this.balance = balance;
+}
+
+public void deposit(double amount) {
+if (amount > 0) {
+balance += amount;
+System.out.println("Amount Deposited Successfully!");
+System.out.println("Total Balance: Rs. " + balance);
+} else {
+System.out.println("Invalid Deposit Amount!");
+}
+}
+
+public void withdraw(double amount) throws InsufficientBalanceException {
+if (amount > balance) {
+throw new InsufficientBalanceException("Insufficient Balance!");
+}
+balance -= amount;
+System.out.println("Withdrawal Successful!");
+System.out.println("Remaining Balance: Rs. " + balance);
+}
+
+public void checkBalance() {
+System.out.println("Current Balance: Rs. " + balance);
+}
+}
+
+public class Main {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+BankAccount account = new BankAccount(5000);
+int choice;
+
+do {
+System.out.println("\n===== BANKING SYSTEM =====");
+System.out.println("1. Deposit");
+System.out.println("2. Withdraw");
+System.out.println("3. Check Balance");
+System.out.println("4. Exit");
+System.out.print("Enter your choice: ");
+choice = sc.nextInt();
+
+try {
+switch (choice) {
+case 1:
+System.out.print("Enter amount to deposit: ");
+double d = sc.nextDouble();
+account.deposit(d);
+break;
+
+case 2:
+System.out.print("Enter amount to withdraw: ");
+double w = sc.nextDouble();
+account.withdraw(w);
+break;
+
+case 3:
+account.checkBalance();
+break;
+
+case 4:
+System.out.println("Thank you");
+break;
+
+default:
+System.out.println("Invalid Choice!");
+}
+} catch (InsufficientBalanceException e) {
+System.out.println("Error: Insufficient Balance!");
+}
+
+} while (choice != 4);
+}
+}
+</pre>
+
+<hr>
+
+<h2>3. Transpose Matrix</h2>
+<pre>
+import java.util.*;
+
+public class Main {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+
+System.out.print("Enter rows: ");
+int rows = sc.nextInt();
+
+System.out.print("Enter columns: ");
+int cols = sc.nextInt();
+
+List<List<Integer>> matrix = new ArrayList<>();
+
+System.out.println("Enter matrix:");
+for (int i = 0; i < rows; i++) {
+List<Integer> row = new ArrayList<>();
+for (int j = 0; j < cols; j++) {
+row.add(sc.nextInt());
+}
+matrix.add(row);
+}
+
+List<List<Integer>> transpose = new ArrayList<>();
+
+for (int i = 0; i < cols; i++) {
+List<Integer> row = new ArrayList<>();
+for (int j = 0; j < rows; j++) {
+row.add(matrix.get(j).get(i));
+}
+transpose.add(row);
+}
+
+System.out.println("Transpose:");
+for (List<Integer> row : transpose) {
+for (Integer val : row) {
+System.out.print(val + " ");
+}
+System.out.println();
+}
+}
+}
+</pre>
+
+<hr>
+
+<h2>4. File Handling</h2>
+<pre>
+import java.io.*;
+import java.util.Scanner;
+
+public class ReadStudentFile {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+
+try {
+FileReader fr = new FileReader("student.txt");
+BufferedReader br = new BufferedReader(fr);
+
+String line;
+System.out.println("Reading Student Data:");
+while ((line = br.readLine()) != null) {
+System.out.println(line);
+}
+
+System.out.println("\nEnter New Student Details");
+System.out.print("Enter ID: ");
+String id = sc.nextLine();
+
+System.out.print("Enter Name: ");
+String name = sc.nextLine();
+
+System.out.print("Enter Marks: ");
+String marks = sc.nextLine();
+
+FileWriter fw = new FileWriter("student.txt", true);
+fw.write(id + " " + name + " " + marks + "\n");
+
+System.out.println("Data added.");
+
+} catch (Exception e) {
+System.out.println("Error");
+}
+}
+}
+</pre>
+
+<hr>
+
+<h2>5. Color Selector (AWT)</h2>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+
+public class ColorSelectorAWT extends Frame implements ItemListener {
+
+Choice colorChoice;
+Label label;
+Panel panel;
+
+ColorSelectorAWT() {
+setTitle("Color Selector");
+setSize(300,200);
+setLayout(null);
+
+label = new Label("Select Color");
+label.setBounds(100,50,120,30);
+
+colorChoice = new Choice();
+colorChoice.add("Red");
+colorChoice.add("Green");
+colorChoice.add("Blue");
+
+colorChoice.setBounds(100,80,100,30);
+
+panel = new Panel();
+panel.setBounds(100,120,100,50);
+
+add(label);
+add(colorChoice);
+add(panel);
+
+colorChoice.addItemListener(this);
+
+setVisible(true);
+}
+
+public void itemStateChanged(ItemEvent e) {
+String c = colorChoice.getSelectedItem();
+
+if(c.equals("Red"))
+panel.setBackground(Color.red);
+else if(c.equals("Green"))
+panel.setBackground(Color.green);
+else if(c.equals("Blue"))
+panel.setBackground(Color.blue);
+}
+
+public static void main(String[] args) {
+new ColorSelectorAWT();
+}
+}
+</pre>
+
+<hr>
+
+</body>
+</html>
